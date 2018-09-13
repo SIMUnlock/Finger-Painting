@@ -1,6 +1,7 @@
 package com.outlook.gonzasosa.apps.touchingcontrols;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,10 +11,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.ImageView;
+
 
 import java.util.Locale;
 
@@ -22,11 +27,15 @@ public class MainActivity extends AppCompatActivity {
     private Canvas canvas;
     private Paint paint;
     private float down_x=0,down_y=0,move_x=0,move_y=0;
+    public static int color_red=0,color_blue=0,color_green=0;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.miToolbar);
+        toolbar.setTitle("Draw");
+        setSupportActionBar(toolbar);
 
         final ImageView imageView = findViewById (R.id.imageView1);
 
@@ -45,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         paint.setDither(true);
 
         //En esta linea es donde se va a recibir como parametro de la otra actividad el color elegido por el usuario
-        paint.setColor(Color.GREEN);
+        paint.setARGB(255,color_red,color_green,color_blue);
 
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
@@ -58,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         imageView.setOnTouchListener ((view, motionEvent) -> {
             //Como el image view es mas grande que la imagen, había un problema con las coordenadas x ,y
             //Se desfasaban y es por eso que se tiene que usar una Matriz
+            paint.setARGB(255,color_red,color_green,color_blue);
             Matrix inverse = new Matrix();
             imageView.getImageMatrix().invert(inverse);
             float[] pts = {
@@ -99,5 +109,22 @@ public class MainActivity extends AppCompatActivity {
             return super.onTouchEvent (motionEvent);
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu,menu);
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.edit) {
+            Intent otra = new Intent(this,Main2Activity.class);
+            startActivity(otra);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }
