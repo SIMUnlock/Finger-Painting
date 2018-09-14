@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             inverse.mapPoints(pts);
             String message = "";
 
-            switch (motionEvent.getAction ()) {
+            switch (motionEvent.getActionMasked ()) {
                 case MotionEvent.ACTION_DOWN:
                     message = String.format (Locale.US, "Touch DOWN on (%.2f, %.2f)", motionEvent.getX (), motionEvent.getY ());
                     //Cuando sea DOWN se toman x, y actuales de la matriz
@@ -84,11 +84,11 @@ public class MainActivity extends AppCompatActivity {
                     down_y=(float)Math.floor(pts[1]) ;
                     Log.i (TAG, message);
 
-                    return true;
+                    break;
                 case MotionEvent.ACTION_UP:
                     message = String.format (Locale.US, "Touch UP on (%.2f, %.2f)", motionEvent.getX (), motionEvent.getY ());
                     Log.i (TAG, message);
-                    return true;
+                    break;
                 case MotionEvent.ACTION_MOVE:
                     message = String.format (Locale.US, "MOVING on (%.2f, %.2f)", motionEvent.getX (), motionEvent.getY ());
                     move_x=(float)Math.floor(pts[0]);
@@ -104,9 +104,19 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.i (TAG, message);
                     break;
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    if(motionEvent.getActionIndex()==1){
+                    message = String.format(Locale.US, "Touch Pointer Down on (%.2f, %.2f)", motionEvent.getX(motionEvent.getActionIndex ()), motionEvent.getY(motionEvent.getActionIndex ()));
+                    Log.i (TAG, message);}
+                    break;
+                case MotionEvent.ACTION_POINTER_UP:
+                    if(motionEvent.getActionIndex()==1){
+                        message = String.format(Locale.US, "Touch Pointer Down on (%.2f, %.2f)", motionEvent.getX(motionEvent.getActionIndex ()), motionEvent.getY(motionEvent.getActionIndex ()));
+                        Log.i (TAG, message);}
+                    break;
             }
 
-            return super.onTouchEvent (motionEvent);
+            return true;
         });
     }
 
